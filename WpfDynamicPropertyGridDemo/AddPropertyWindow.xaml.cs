@@ -24,12 +24,15 @@ namespace WpfDynamicPropertyGridDemo
             InitializeComponent();
         }
 
-        public bool CategoryEditable => !string.IsNullOrEmpty(Category);
+        private void WndWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            wndCategory.IsReadOnly = !string.IsNullOrEmpty(Category);
+        }
 
         public string Category
         {
             get { return (string)GetValue(CategoryProperty); }
-            set { SetValue(CategoryProperty, value); }
+            set { SetValue(CategoryProperty, value);}
         }
 
         // Using a DependencyProperty as the backing store for Category.  This enables animation, styling, binding, etc...

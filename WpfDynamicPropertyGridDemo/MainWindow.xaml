@@ -34,7 +34,7 @@
             <local:MyPropertyGrid.PropertyItemContextMenu>
                 <ContextMenu>
                     <MenuItem Header="添加属性" Click="AddProperty_Click"/>
-                    <MenuItem Header="删除属性"/>
+                    <MenuItem Header="删除属性" Click="DeleteProperty_Click"/>
                 </ContextMenu>
             </local:MyPropertyGrid.PropertyItemContextMenu>
         </local:MyPropertyGrid>

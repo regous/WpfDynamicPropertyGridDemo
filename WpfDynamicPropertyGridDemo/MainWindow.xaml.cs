@@ -314,17 +314,7 @@ namespace WpfDynamicPropertyGridDemo
             //wndPropertyGrid.SelectedObjectName = "BBB";
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-           var ss = ((ContextMenu)menuItem.Parent).PlacementTarget;
-            var ue0 = LogicalTreeHelper.GetParent(ss);
-            
-            CustomClass myProperties = wndPropertyGrid.SelectedObject as CustomClass;
-            myProperties.Add(new CustomProperty(Guid.NewGuid().ToString(), "Sven", typeof(string), false, true, "Cat1", typeof(CustomTextBlockEditor)));
-            wndPropertyGrid.SelectedObject = null;
-            wndPropertyGrid.SelectedObject = myProperties;
-        }
+
        
         private void AddCategory_Click(object sender, RoutedEventArgs e)
         {
@@ -339,11 +329,6 @@ namespace WpfDynamicPropertyGridDemo
             }
         }
 
-        private void AddProperty_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem aMenuItem = sender as MenuItem;
-        }
-
         private void DeleteCategory_Click(object sender, RoutedEventArgs e)
         {
             MenuItem aMenuItem = sender as MenuItem;
@@ -351,6 +336,32 @@ namespace WpfDynamicPropertyGridDemo
                 return;
             string category = aMenuItem.Tag as string;
             myProperties.RemoveCategory(category);
+            wndPropertyGrid.UpdateProperties();
+        }
+
+        private void AddProperty_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem aMenuItem = sender as MenuItem;
+            CustomClass aCustomClass = aMenuItem.Tag as CustomClass;
+            CustomPropertyDescriptor aCustomPropertyDescriptor = aMenuItem.DataContext as CustomPropertyDescriptor;
+            AddPropertyWindow dlg = new AddPropertyWindow();
+            dlg.Owner = this;
+            dlg.Category = aCustomPropertyDescriptor.Category;
+            dlg.Categories = aCustomClass.Categories;
+            dlg.PropertyNames = aCustomClass.PropertyNames;
+            if(true==dlg.ShowDialog())
+            {
+                aCustomClass.Add(new CustomProperty(dlg.PropertyName, dlg.DefaultValue, typeof(string), false, true, dlg.Category));
+                wndPropertyGrid.UpdateProperties();
+            }
+        }
+
+        private void DeleteProperty_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem aMenuItem = sender as MenuItem;
+            CustomClass aCustomClass = aMenuItem.Tag as CustomClass;
+            CustomPropertyDescriptor aCustomPropertyDescriptor = aMenuItem.DataContext as CustomPropertyDescriptor;
+            aCustomClass.Remove(aCustomPropertyDescriptor.Name);
             wndPropertyGrid.UpdateProperties();
         }
     }

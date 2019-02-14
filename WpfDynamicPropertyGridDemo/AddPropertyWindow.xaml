@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfDynamicPropertyGridDemo"
         mc:Ignorable="d"
         x:Name="wndWindow"
-        Title="添加属性" SizeToContent="Height" Width="300" WindowStartupLocation="CenterOwner">
+        Title="添加属性" SizeToContent="Height" Width="300" WindowStartupLocation="CenterOwner" Loaded="WndWindow_Loaded">
     <Grid Margin="10,10" DataContext="{Binding ElementName=wndWindow}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,7 +23,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Label Content="属性组" />
-        <TextBox Grid.Column="2" Text="{Binding Path=Category}" IsReadOnly="{Binding Path=CategoryEditable,Mode=OneTime}"/>
+        <TextBox x:Name="wndCategory" Grid.Column="2" Text="{Binding Path=Category}"/>
         <Label Grid.Row="2" Content="属性名" />
         <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path=PropertyName}" />
         <Label Grid.Row="4" Content="默认值" />
