@@ -23,10 +23,11 @@ namespace WpfDynamicPropertyGridDemo
     /// </summary>
     public partial class UglyView : UserControl
     {
+        private Person person;
         public UglyView()
         {
             InitializeComponent();
-            var person = new Man();
+            person = new Man();
             person.FirstName = "John";
             person.LastName = "Doe";
             person.WritingFontSize = 12;
@@ -36,98 +37,69 @@ namespace WpfDynamicPropertyGridDemo
                 FirstName = "Jane",
                 LastName = "Doe"
             };
-
+            
+            PreparePropertyGrid();
             this.DataContext = person;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            var pds = propertyGrid.PropertyDefinitions;
+            //this.propertyGrid.AutoGenerateProperties = false;
         }
-        private List<object> currentPropertySelection = new List<object>();
-        private bool suppressPropertyUpdates = false;
+
         private void PreparePropertyGrid()
         {
             PropertyDefinitionCollection propertyDefinitions = new PropertyDefinitionCollection();
 
-            // This is how I determine 
-            var mainPropertySet = this.currentPropertySelection.FirstOrDefault();
-
-            if (mainPropertySet != null)
+            var properties = TypeDescriptor.GetProperties(person.GetType());
+            // Allowing for multiple selection, if on further iterations through the selected items we will remove properties that do not exist in both PropertySets
+            foreach (var p in properties.Cast<PropertyDescriptor>())
             {
-                var properties = TypeDescriptor.GetProperties(mainPropertySet.GetType());
-                // Allowing for multiple selection, if on further iterations through the selected items we will remove properties that do not exist in both PropertySets
-                bool firstIteration = true;
+                if (p.PropertyType != typeof(System.Windows.Media.Color?))
+                    continue;
+                string category = p.Category;
+                string description = p.Description;
+                string displayName = p.DisplayName ?? p.Name;
+                int? displayOrder = null;
+                bool? isBrowsable = p.IsBrowsable;
+                bool? isExpandable = null;
 
-                foreach (var x in this.currentPropertySelection)
+                var orderAttribute = p.Attributes[typeof(PropertyOrderAttribute)] as PropertyOrderAttribute;
+                if (orderAttribute != null)
                 {
-                    foreach (var p in properties.Cast<PropertyDescriptor>())
-                    {
-                        if (!firstIteration)
-                        {
-                            // Perhaps we should be checking a little more safely for TargetProperties but if the collection is empty we have bigger problems.
-                            var definition = propertyDefinitions.FirstOrDefault(d => string.Equals(d.TargetProperties[0] as string, p.Name, StringComparison.Ordinal));
-
-                            // Someone in the selection does not have this property so we can ignore it.
-                            if (definition == null)
-                            {
-                                continue;
-                            }
-
-                            // If this item doesn't have the property remove it from the display collection and proceed.
-                            var localProperty = x.GetType().GetProperty(p.Name);
-                            if (localProperty == null)
-                            {
-                                propertyDefinitions.Remove(definition);
-                                continue;
-                            }
-
-                            // There is actually no point in proceeding if this is not the first iteration and we have checked whether the property exists.
-                            continue;
-                        }
-
-                        string category = p.Category;
-                        string description = p.Description;
-                        string displayName = p.DisplayName ?? p.Name;
-                        int? displayOrder = null;
-                        bool? isBrowsable = p.IsBrowsable;
-                        bool? isExpandable = null;
-
-                        var orderAttribute = p.Attributes[typeof(PropertyOrderAttribute)] as PropertyOrderAttribute;
-                        if (orderAttribute != null)
-                        {
-                            displayOrder = orderAttribute.Order;
-                        }
-
-                        var expandableAttribute = p.Attributes[typeof(ExpandableObjectAttribute)] as ExpandableObjectAttribute;
-                        if (expandableAttribute != null)
-                        {
-                            isExpandable = true;
-                        }
-
-                        propertyDefinitions.Add(new PropertyDefinition
-                        {
-                            Category = category,
-                            Description = description,
-                            DisplayName = displayName,
-                            DisplayOrder = displayOrder,
-                            IsBrowsable = isBrowsable,
-                            IsExpandable = isExpandable,
-                            TargetProperties = new[] { p.Name },
-                        });
-                    }
+                    displayOrder = orderAttribute.Order;
                 }
 
-                firstIteration = false;
+                var expandableAttribute = p.Attributes[typeof(ExpandableObjectAttribute)] as ExpandableObjectAttribute;
+                if (expandableAttribute != null)
+                {
+                    isExpandable = true;
+                }
+                
+                var aPropertyDefinition = new PropertyDefinition
+                {
+                    Category = category,
+                    Description = description,
+                    DisplayName = displayName,
+                    DisplayOrder = displayOrder,
+                    IsBrowsable = isBrowsable,
+                    IsExpandable = isExpandable,
+                    TargetProperties = new[] { p.Name },
+                };
+                if (p.PropertyType == typeof(System.Windows.Media.Color?))
+                {
+                    aPropertyDefinition.IsExpandable = true;
+                    aPropertyDefinition.PropertyDefinitions.Add(new PropertyDefinition() { TargetProperties = new[] { "R", "G", "B" } });
+                }
+                propertyDefinitions.Add(aPropertyDefinition);
 
-                this.propertyGrid.PropertyDefinitions = propertyDefinitions;
             }
+            this.propertyGrid.PropertyDefinitions = propertyDefinitions;
         }
 
         public void UpdateProperties(Tuple<string, bool?, Visibility?>[] newPropertyStates)
         {
             // Note this currently works under the assumption that an Item has to be selected in order to have a value changed.
-            this.suppressPropertyUpdates = true;
 
             foreach (var property in newPropertyStates)
             {
@@ -177,46 +149,31 @@ namespace WpfDynamicPropertyGridDemo
                 }
             }
 
-            this.suppressPropertyUpdates = false;
         }
 
         void PropertyGrid_PreparePropertyItem(object sender, PropertyItemEventArgs e)
         {
-            foreach (var x in this.currentPropertySelection)
+            if (e.PropertyItem.ParentElement is PropertyItem)
             {
-                // If we are in read-only mode do not allow the editing of any property.
-
-                string propertyName = ((PropertyItem)e.PropertyItem).PropertyDescriptor.Name;
-                System.Reflection.PropertyInfo property = x.GetType().GetProperty(propertyName);
-                var propertyItem = e.Item as PropertyItem;
-
-                // If the property doesn't exist then check to see if it is on an expandable item.
-                if (property == null)
+                PropertyItem aParentPropertyItem = e.PropertyItem.ParentElement as PropertyItem;
+                if (aParentPropertyItem == null)
+                    return;
+                PropertyItem aChildPropertyItem = e.PropertyItem as PropertyItem;
+                if (aChildPropertyItem.PropertyName != "R" &&
+                    aChildPropertyItem.PropertyName != "G" &&
+                    aChildPropertyItem.PropertyName != "B")
                 {
-                    property = propertyItem.Instance.GetType().GetProperty(propertyName);
-                }
-
-                bool hasProperty = property != null;
-
-                if (hasProperty)
-                {
-                    var browsableAttribute = property.GetCustomAttribute<BrowsableAttribute>(true);
-                    if (browsableAttribute != null &&
-                        !browsableAttribute.Browsable)
-                    {
-                        e.PropertyItem.Visibility = Visibility.Collapsed;
-                        e.Handled = true;
-                        break;
-                    }
-
-                    var visibilityAttribute = property.GetCustomAttribute<VisibilityAttribute>(true);
-                    if (visibilityAttribute != null)
-                    {
-                        e.PropertyItem.Visibility = visibilityAttribute.Visibility;
-                        e.Handled = true;
-                    }
+                    e.PropertyItem.Visibility = Visibility.Collapsed;
+                    e.Handled = true;
                 }
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            List<Tuple<string, bool?, Visibility?>> lsTuple = new List<Tuple<string, bool?, Visibility?>>();
+            lsTuple.Add(new Tuple<string, bool?, Visibility?>("IsMale", true, Visibility.Collapsed));
+            UpdateProperties(lsTuple.ToArray());
         }
     }
 }
