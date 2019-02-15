@@ -74,6 +74,8 @@
     <Compile Include="Model\Person.cs" />
     <Compile Include="Model\VisibilityAttribute.cs" />
     <Compile Include="PropertyInfoExtension.cs" />
+    <Compile Include="TabSizeConverter.cs" />
+    <Compile Include="UniformTabPanel.cs" />
     <Compile Include="View\CommonView.xaml.cs">
       <DependentUpon>CommonView.xaml</DependentUpon>
     </Compile>

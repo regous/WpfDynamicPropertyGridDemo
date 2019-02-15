@@ -9,8 +9,67 @@
         xmlns:utilities="clr-namespace:Xceed.Wpf.Toolkit.Core.Utilities;assembly=Xceed.Wpf.Toolkit"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
+    <Window.Resources>
+        <Style x:Key="Style-TabControl-Main" TargetType="{x:Type TabControl}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabControl}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Border>
+                                <local:UniformTabPanel x:Name="HeaderPanel" />
+                            </Border>
+
+                            <Border x:Name="Border" Grid.Row="1" 
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                                <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="Style-TabItem-Main" TargetType="{x:Type TabItem}">
+            <!--https://social.msdn.microsoft.com/forums/vstudio/en-US/df4f7fc3-f0ec-4ed1-a022-a32650e49cb3/how-to-wrap-header-text-in-tabcontrol-->
+            <Setter Property="HeaderTemplate" >
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Margin="2,2" Name="Border" BorderThickness="1,1,1,1" BorderBrush="Gainsboro" >
+                            <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="10,2"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="LightSkyBlue" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <TabControl>
+        <TabControl Style="{StaticResource Style-TabControl-Main}" ItemContainerStyle="{StaticResource Style-TabItem-Main}">
             <TabItem Header="Common">
                 <local:CommonView />
             </TabItem>
