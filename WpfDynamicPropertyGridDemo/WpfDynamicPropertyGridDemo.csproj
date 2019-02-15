@@ -8,11 +8,12 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>WpfDynamicPropertyGridDemo</RootNamespace>
     <AssemblyName>WpfDynamicPropertyGridDemo</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -69,11 +71,36 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="AddPropertyWindow.xaml">
+    <Compile Include="Model\Person.cs" />
+    <Compile Include="Model\VisibilityAttribute.cs" />
+    <Compile Include="PropertyInfoExtension.cs" />
+    <Compile Include="View\CommonView.xaml.cs">
+      <DependentUpon>CommonView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DynamicView.xaml.cs">
+      <DependentUpon>DynamicView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LastNameUserControlEditor.xaml.cs">
+      <DependentUpon>LastNameUserControlEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReadOnlyCollectionEditor.xaml.cs">
+      <DependentUpon>ReadOnlyCollectionEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReadOnlyCollectionViewer.xaml.cs">
+      <DependentUpon>ReadOnlyCollectionViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UglyView.xaml.cs">
+      <DependentUpon>UglyView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\AddPropertyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CustomTextBlockEditorWindow.xaml">
+    <Page Include="View\CommonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CustomTextBlockEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -81,22 +108,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AddPropertyWindow.xaml.cs">
+    <Compile Include="View\AddPropertyWindow.xaml.cs">
       <DependentUpon>AddPropertyWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CustomTextBlockEditor.cs" />
-    <Compile Include="CustomTextBlockEditorWindow.xaml.cs">
+    <Compile Include="Editor\CustomTextBlockEditor.cs" />
+    <Compile Include="View\CustomTextBlockEditorWindow.xaml.cs">
       <DependentUpon>CustomTextBlockEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="DynamicPropertyGrid.style.xaml">
+    <Page Include="PropertyControl\DynamicPropertyGrid.style.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -105,12 +132,33 @@
       <Generator>MSBuild:Compile</Generator>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
     </Page>
+    <Page Include="View\DynamicView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LastNameUserControlEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReadOnlyCollectionEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReadOnlyCollectionViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UglyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DynamicPropertyGrid.cs" />
+    <Compile Include="PropertyControl\DynamicPropertyGrid.cs" />
     <Compile Include="Model\CustomClass.cs" />
     <Compile Include="Model\CustomProperty.cs" />
     <Compile Include="Model\CustomPropertyDescriptor.cs" />
+    <Compile Include="Model\DataObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

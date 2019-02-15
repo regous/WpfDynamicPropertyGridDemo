@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace WpfDynamicPropertyGridDemo
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// ReadOnlyCollectionViewer.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ReadOnlyCollectionViewer : Window
     {
-        public MainWindow()
+        public ReadOnlyCollectionViewer()
         {
             InitializeComponent();
         }

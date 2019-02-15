@@ -8,45 +8,18 @@
         xmlns:pg="clr-namespace:Xceed.Wpf.Toolkit.PropertyGrid;assembly=Xceed.Wpf.Toolkit"
         xmlns:utilities="clr-namespace:Xceed.Wpf.Toolkit.Core.Utilities;assembly=Xceed.Wpf.Toolkit"
         mc:Ignorable="d"
-        x:Name="wndWindow"
-        Title="MainWindow" Height="450" Width="800" Loaded="WndWindow_Loaded">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="DynamicPropertyGrid.style.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-            <local:PropertyItemValueConterter x:Key="PropertyItemValueConterter" />
-            <local:CategoryValueConterter x:Key="CategoryValueConterter" />
-        </ResourceDictionary>
-    </Window.Resources>
+        Title="MainWindow" Height="600" Width="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*" />
-            <ColumnDefinition Width="5" />
-            <ColumnDefinition Width="6*" />
-        </Grid.ColumnDefinitions>
-        <TextBlock FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">Left side</TextBlock>
-        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-        <local:DynamicPropertyGrid Style="{StaticResource DynamicPropertyGridStyle}" PropertyContainerStyle="{StaticResource DynamicPropertyItemStyle}" Grid.Column="2" x:Name="wndPropertyGrid">
-            <local:DynamicPropertyGrid.ThumbContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="添加属性组" Click="AddCategory_Click"/>
-                </ContextMenu>
-            </local:DynamicPropertyGrid.ThumbContextMenu>
-            <local:DynamicPropertyGrid.CategoryContextMenu>
-                <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self},Converter={StaticResource CategoryValueConterter}}">
-                    <MenuItem Header="添加属性组" Click="AddCategory_Click"/>
-                    <MenuItem Header="删除属性组" Click="DeleteCategory_Click"/>
-                    <Separator />
-                    <MenuItem Header="添加属性" Click="AddCategoryProperty_Click"/>
-                </ContextMenu>
-            </local:DynamicPropertyGrid.CategoryContextMenu>
-            <local:DynamicPropertyGrid.PropertyItemContextMenu>
-                <ContextMenu DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self},Converter={StaticResource PropertyItemValueConterter}}">
-                    <MenuItem Header="添加属性" Click="AddProperty_Click"/>
-                    <MenuItem Header="删除属性" Click="DeleteProperty_Click"/>
-                </ContextMenu>
-            </local:DynamicPropertyGrid.PropertyItemContextMenu>
-        </local:DynamicPropertyGrid>
+        <TabControl>
+            <TabItem Header="Common">
+                <local:CommonView />
+            </TabItem>
+            <TabItem Header="Ugly">
+                <local:UglyView/>
+            </TabItem>
+            <TabItem Header="Dynamic">
+                <local:DynamicView/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
