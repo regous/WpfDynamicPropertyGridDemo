@@ -12,7 +12,172 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Xceed.Wpf.Toolkit;component/propertygrid/themes/generic.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    <Style x:Key="yyy" TargetType="{x:Type pg:PropertyItemBase}">
+    
+    <Style x:Key="ExpanderStyleEx"
+         TargetType="{x:Type Expander}">
+        <Setter Property="Padding"
+            Value="0" />
+        <Setter Property="Background"
+            Value="#FFF0F0F0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*"
+                             x:Name="ContentRow" />
+                        </Grid.RowDefinitions>
+                        <Border x:Name="Border"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="#FFF0F0F0">
+                            <ToggleButton Template="{StaticResource ExpanderToggleButton}"
+                            IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            OverridesDefaultStyle="True">
+                                <ContentPresenter Margin="1"
+                                  RecognizesAccessKey="True"
+                                  ContentSource="Header"
+                                  TextElement.FontWeight="Bold">
+                                    <ContentPresenter.ContentTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path=DataContext,RelativeSource={RelativeSource Mode=Self}}"
+                                                       ContextMenu="{Binding CategoryContextMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DynamicPropertyGrid}}"
+                                                       ></TextBlock>
+                                        </DataTemplate>
+                                    </ContentPresenter.ContentTemplate>
+                                </ContentPresenter>
+                            </ToggleButton>
+                        </Border>
+                        <Border Visibility="Collapsed"
+                    Grid.Row="1"
+                    x:Name="ExpandSite"
+                    Background="{x:Static SystemColors.ControlBrush}"
+                    Padding="10 0 0 0">
+                            <Border BorderThickness="0"
+                      Margin="0"
+                      Padding="0"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  Margin="{TemplateBinding Padding}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  Focusable="false" />
+                            </Border>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded"
+                     Value="True">
+                            <Setter Property="Visibility"
+                      Value="Visible"
+                      TargetName="ExpandSite" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="PropertyItemGroupContainerStyleEx"
+         TargetType="{x:Type GroupItem}">
+        <Style.Resources>
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border>
+                        <Expander x:Name="expander"
+                      Header="{Binding Name}"
+                      Style="{StaticResource ExpanderStyleEx}"
+                      IsExpanded="True">
+                            <ItemsPresenter />
+                        </Expander>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Name, Converter={StaticResource IsDefaultCategoryConverter}}"
+                     Value="True" />
+                    <Condition Binding="{Binding IsMiscCategoryLabelHidden, RelativeSource={RelativeSource AncestorType={x:Type pg:PropertyGrid}}}"
+                     Value="True" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                            <!-- No Expander for the Misc Category if IsMiscCategoryLabelHidden == true-->
+                            <ItemsPresenter />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </MultiDataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <pg:CategoryGroupStyleSelector x:Key="categoryGroupStyleSelectorEx"
+                                 SingleDefaultCategoryItemGroupStyle="{StaticResource SingleDefaultCategoryItemGroupContainerStyle}"
+                                 ItemGroupStyle="{StaticResource PropertyItemGroupContainerStyleEx}" />
+    <Style x:Key="ExpanderStyle"
+         TargetType="{x:Type Expander}">
+        <Setter Property="Padding"
+            Value="100" />
+        <Setter Property="Background"
+            Value="#FFF0F0F0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*"
+                             x:Name="ContentRow" />
+                        </Grid.RowDefinitions>
+                        <Border x:Name="Border"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="#FFF0F0F0">
+                            <ToggleButton Template="{StaticResource ExpanderToggleButton}"
+                            IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            OverridesDefaultStyle="True">
+                                <ContentPresenter Margin="1"
+                                  RecognizesAccessKey="True"
+                                  ContentSource="Header"
+                                  TextElement.FontWeight="Bold" />
+                            </ToggleButton>
+                        </Border>
+                        <Border Visibility="Collapsed"
+                    Grid.Row="1"
+                    x:Name="ExpandSite"
+                    Background="{x:Static SystemColors.ControlBrush}"
+                    Padding="10 0 0 0">
+                            <Border BorderThickness="0"
+                      Margin="0"
+                      Padding="0"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  Margin="{TemplateBinding Padding}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  Focusable="false" />
+                            </Border>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded"
+                     Value="True">
+                            <Setter Property="Visibility"
+                      Value="Visible"
+                      TargetName="ExpandSite" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DynamicPropertyItemStyle" TargetType="{x:Type pg:PropertyItemBase}">
         <Setter Property="Background"
             Value="{x:Static SystemColors.WindowBrush}" />
         <!-- Set the margin at 1 pixel bottom to let the horizontal "line" effect appear. -->
@@ -64,7 +229,7 @@
                                         <ToggleButton x:Name="_expandableButton"
                                   Grid.Column="0"
                                   Template="{StaticResource ExpanderToggleButton}"
-                                  OverridesDefaultStyle="True"
+                                  OverridesDefaultStyle="False"
                                   IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
                                   Visibility="{Binding IsExpandable, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}" >
                                         </ToggleButton>
@@ -76,7 +241,9 @@
                                          HorizontalAlignment="Stretch"
                                          VerticalAlignment="Center"
                                          TextTrimming="CharacterEllipsis"
-                                         IsEnabled="{Binding IsReadOnly, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=pg:PropertyGrid}, Converter={StaticResource InverseBoolConverter}}" >
+                                         IsEnabled="{Binding IsReadOnly, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=pg:PropertyGrid}, Converter={StaticResource InverseBoolConverter}}" 
+                                         ContextMenu="{Binding PropertyItemContextMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DynamicPropertyGrid}}"
+                                         >
                                         </pg:TrimmedTextBlock>
                                     </Grid>
 
@@ -85,7 +252,7 @@
                         Margin="5,0,5,0"
                         Visibility="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=pg:PropertyGrid}, Converter={StaticResource BooleanToVisibilityConverter}}"
                         utilities:ContextMenuUtilities.OpenOnMouseLeftButtonClick="True"
-                        ContextMenu="{Binding AdvancedOptionsMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=pg:PropertyGrid}}">
+                        ContextMenu="{Binding PropertyItemContextMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DynamicPropertyGrid}}">
 
                                         <!-- ImageSource is set in Triggers for others Themes to set their proper icons -->
                                         <Image x:Name="_optionsImage"
@@ -219,37 +386,37 @@
                          Value="{x:Static pg:StringConstants.Local}">
                             <Setter TargetName="_optionsImage"
                       Property="Source"
-                      Value="../Images/Local11.png" />
+                      Value="/Xceed.Wpf.Toolkit;component/propertygrid/images/Local11.png" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=_optionsImage, Path=ToolTip}"
                          Value="{x:Static pg:StringConstants.Resource}">
                             <Setter TargetName="_optionsImage"
                       Property="Source"
-                      Value="../Images/Resource11.png" />
+                      Value="/Xceed.Wpf.Toolkit;component/propertygrid/images/Resource11.png" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=_optionsImage, Path=ToolTip}"
                          Value="{x:Static pg:StringConstants.Databinding}">
                             <Setter TargetName="_optionsImage"
                       Property="Source"
-                      Value="../Images/Database11.png" />
+                      Value="/Xceed.Wpf.Toolkit;component/propertygrid/images/Database11.png" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=_optionsImage, Path=ToolTip}"
                          Value="{x:Static pg:StringConstants.Inheritance}">
                             <Setter TargetName="_optionsImage"
                       Property="Source"
-                      Value="../Images/Inheritance11.png" />
+                      Value="/Xceed.Wpf.Toolkit;component/propertygrid/images/Inheritance11.png" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=_optionsImage, Path=ToolTip}"
                          Value="{x:Static pg:StringConstants.StyleSetter}">
                             <Setter TargetName="_optionsImage"
                       Property="Source"
-                      Value="../Images/Style11.png" />
+                      Value="/Xceed.Wpf.Toolkit;component/propertygrid/images/Style11.png" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=_optionsImage, Path=ToolTip}"
                          Value="{x:Static pg:StringConstants.Default}">
                             <Setter TargetName="_optionsImage"
                       Property="Source"
-                      Value="../Images/AdvancedProperties11.png" />
+                      Value="/Xceed.Wpf.Toolkit;component/propertygrid/images/AdvancedProperties11.png" />
                         </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -257,7 +424,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="xxxxxx" TargetType="{x:Type pg:PropertyGrid}" BasedOn="{StaticResource {x:Type pg:PropertyGrid}}" >
+    <Style x:Key="DynamicPropertyGridStyle" TargetType="{x:Type local:DynamicPropertyGrid}" BasedOn="{StaticResource {x:Type pg:PropertyGrid}}" >
         <Setter Property="AdvancedOptionsMenu"
             Value="{StaticResource {ComponentResourceKey TypeInTargetAssembly={x:Type pg:PropertyGrid}, ResourceId=SelectedObjectAdvancedOptionsMenu}}" />
         <Setter Property="Background"
@@ -340,7 +507,7 @@
                                  VerticalAlignment="Center"
                                  Style="{StaticResource OptionsToggleButtonStyle}"
                                  ToolTip="Categorized">
-                                            <Image Source="./../Images/Categorize16.png"
+                                            <Image Source="pack://application:,,,/Xceed.Wpf.Toolkit;component/propertygrid/images/categorize16.png"
                              Width="16"
                              Height="16" >
                                             </Image>
@@ -349,7 +516,7 @@
                                  VerticalAlignment="Center"
                                  Style="{StaticResource OptionsToggleButtonStyle}"
                                  ToolTip="Alphabetical">
-                                            <Image Source="./../Images/SortAscending16.png"
+                                            <Image Source="pack://application:,,,/Xceed.Wpf.Toolkit;component/propertygrid/images/SortAscending16.png"
                              Width="16"
                              Height="16" >
                                             </Image>
@@ -394,7 +561,7 @@
                             Command="commands:PropertyGridCommands.ClearFilter"
                             Style="{StaticResource ClearFilterButtonStyle}"
                             HorizontalAlignment="Left">
-                                            <Image Source="./../Images/ClearFilter16.png"
+                                            <Image Source="/Xceed.Wpf.Toolkit;component/propertygrid/images/ClearFilter16.png"
                              Width="16"
                              Height="16" >
                                             </Image>
@@ -403,9 +570,14 @@
                                 </Border>
                             </Grid>
 
-                            <Grid Grid.Row="2"
-                    Background="{x:Static SystemColors.WindowBrush}">
-                                <pg:PropertyItemsControl  x:Name="PART_PropertyItemsControl"
+                            <Grid Grid.Row="2" Background="{x:Static SystemColors.WindowBrush}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <pg:PropertyItemsControl Grid.Row="0" x:Name="PART_PropertyItemsControl"
                                           IsTabStop="False"
                                           Focusable="False"
                                           ItemsSource="{Binding Properties, RelativeSource={RelativeSource TemplatedParent}}"
@@ -415,44 +587,45 @@
                                           VirtualizingStackPanel.VirtualizationMode="Recycling"
                                           ScrollViewer.CanContentScroll="True"
                                           VerticalAlignment="Top">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
 
-                                    <ItemsControl.GroupStyle>
-                                        <GroupStyle ContainerStyleSelector="{StaticResource categoryGroupStyleSelector}" />
-                                    </ItemsControl.GroupStyle>
+                                        <ItemsControl.GroupStyle>
+                                            <GroupStyle ContainerStyleSelector="{StaticResource categoryGroupStyleSelectorEx}" />
+                                        </ItemsControl.GroupStyle>
 
-                                    <ItemsControl.Template>
-                                        <ControlTemplate>
-                                            <Border BorderThickness="{TemplateBinding BorderThickness}"
+                                        <ItemsControl.Template>
+                                            <ControlTemplate>
+                                                <Border BorderThickness="{TemplateBinding BorderThickness}"
                               Padding="{TemplateBinding Padding}"
                               BorderBrush="{TemplateBinding BorderBrush}"
                               Background="{TemplateBinding Background}"
                               SnapsToDevicePixels="True">
-                                                <ScrollViewer x:Name="ScrollBar"
+                                                    <ScrollViewer x:Name="ScrollBar"
                                       Padding="{TemplateBinding Padding}"
                                       Focusable="False"
                                       VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Disabled">
-                                                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                                </ScrollViewer>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding ShowHorizontalScrollBar, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=pg:PropertyGrid}}"
+                                                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                                    </ScrollViewer>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding ShowHorizontalScrollBar, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=pg:PropertyGrid}}"
                                      Value="True">
-                                                    <Setter Property="HorizontalScrollBarVisibility"
+                                                        <Setter Property="HorizontalScrollBarVisibility"
                                   Value="Auto"
                                   TargetName="ScrollBar" />
-                                                </DataTrigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </ItemsControl.Template>
+                                                    </DataTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </ItemsControl.Template>
 
-                                </pg:PropertyItemsControl>
-
+                                    </pg:PropertyItemsControl>
+                                    <Grid Background="Transparent" Grid.Row="1" ContextMenu="{Binding ThumbContextMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DynamicPropertyGrid}}"></Grid>
+                                </Grid>
                                 <Thumb x:Name="PART_DragThumb"
                        HorizontalAlignment="Left"
                        Width="5"
@@ -464,7 +637,6 @@
                                         </ControlTemplate>
                                     </Thumb.Template>
                                 </Thumb>
-
                             </Grid>
 
                             <GridSplitter Height="3"

@@ -96,9 +96,21 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="DynamicPropertyGrid.style.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Properties\DesignTimeResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyPropertyGrid.cs" />
+    <Compile Include="DynamicPropertyGrid.cs" />
+    <Compile Include="Model\CustomClass.cs" />
+    <Compile Include="Model\CustomProperty.cs" />
+    <Compile Include="Model\CustomPropertyDescriptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
