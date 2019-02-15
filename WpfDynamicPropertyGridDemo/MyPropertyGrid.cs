@@ -119,6 +119,7 @@ namespace WpfDynamicPropertyGridDemo
 
         private void PropertyItemContextMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            return;
             if (PropertyItemContextMenu == null)
                 return;
 
@@ -181,6 +182,7 @@ namespace WpfDynamicPropertyGridDemo
         }
         private void MyPropertyGrid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            return;
             if (e.ChangedButton != System.Windows.Input.MouseButton.Right)
                 return;
             var p = e.GetPosition(sender as UIElement);
@@ -217,7 +219,7 @@ namespace WpfDynamicPropertyGridDemo
             }
             else if(MyEnum.Thumb==eEnum)
             {
-                aContextMenu = ThumbContextMenu;
+                //aContextMenu = ThumbContextMenu;
             }
             if (aContextMenu != null)
             {
