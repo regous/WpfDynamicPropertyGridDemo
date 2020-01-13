@@ -70,13 +70,13 @@
     </Window.Resources>
     <Grid>
         <TabControl Style="{StaticResource Style-TabControl-Main}" ItemContainerStyle="{StaticResource Style-TabItem-Main}">
-            <TabItem Header="Common">
-                <local:CommonView />
-            </TabItem>
-            <TabItem Header="Ugly">
+            <TabItem Header="Ugly" Visibility="Collapsed">
                 <local:UglyView/>
             </TabItem>
-            <TabItem Header="Dynamic">
+            <TabItem Header="Common"  Visibility="Collapsed">
+                <local:CommonView />
+            </TabItem>
+            <TabItem Header="Dynamic" IsSelected="True" >
                 <local:DynamicView/>
             </TabItem>
         </TabControl>

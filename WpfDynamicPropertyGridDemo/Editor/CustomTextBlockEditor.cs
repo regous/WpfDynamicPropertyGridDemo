@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace WpfDynamicPropertyGridDemo
 {
@@ -14,7 +15,11 @@ namespace WpfDynamicPropertyGridDemo
             base.SetControlProperties(propertyItem);
             Editor.PreviewMouseUp += Editor_MouseDown;
         }
-
+        public override FrameworkElement ResolveEditor(Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem propertyItem)
+        {
+            var fe = base.ResolveEditor(propertyItem);
+            return fe;
+        }
         private void Editor_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             CustomTextBlockEditorWindow dlg = new CustomTextBlockEditorWindow();

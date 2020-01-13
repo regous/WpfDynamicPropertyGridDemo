@@ -28,11 +28,11 @@ namespace WpfDynamicPropertyGridDemo
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             myProperties = new CustomClass();
-            myProperties.Add(new CustomProperty("Card", 0.1, typeof(double), false, true, "Cat2"));
-            myProperties.Add(new CustomProperty("Bank", true, typeof(bool), false, true, "Cat2"));
-            myProperties.Add(new CustomProperty("Name", "Sven", typeof(string), false, true, "Cat1", typeof(CustomTextBlockEditor)));
-            myProperties.Add(new CustomProperty("Surname", "Bendo", typeof(string), false, true, "Cat1", typeof(CustomTextBlockEditor)));
-
+            myProperties.Add(new CustomProperty("Card", 0.1, typeof(double), true, true, "Cat2"));
+            myProperties.Add(new CustomProperty("Bank", true, typeof(bool), true, true, "Cat2"));
+            myProperties.Add(new CustomProperty("Name", "Sven", typeof(string), true, true, "Cat1", typeof(CustomTextBlockEditor)));
+            myProperties.Add(new CustomProperty("Surname", "Bendo", typeof(string), true, true, "Cat1", typeof(CustomTextBlockEditor)));
+            myProperties.Add(new CustomProperty("Color", Color.FromRgb(123,250,41), typeof(Color), true, true, "Cat1", typeof(CustomColorEditor)));
             wndDynamicPropertyGrid.AutoGenerateProperties = true;
             wndDynamicPropertyGrid.SelectedObject = myProperties;
             wndDynamicPropertyGrid.ShowSortOptions = true;
